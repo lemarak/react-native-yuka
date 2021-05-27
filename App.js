@@ -2,41 +2,33 @@ import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons } from "@expo/vector-icons";
-import HomeScreen from "./containers/HomeScreen";
-import ProfileScreen from "./containers/ProfileScreen";
-import SignInScreen from "./containers/SignInScreen";
-import SignUpScreen from "./containers/SignUpScreen";
-import SettingsScreen from "./containers/SettingsScreen";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
-const Tab = createBottomTabNavigator();
+import { Ionicons } from "@expo/vector-icons";
+
+import SplashScreen from "./containers/SplashScreen";
+import ProductsScreen from "./containers/ProductsScreen";
+import ProductScreen from "./containers/ProductScreen";
+import CameraScreen from "./containers/CameraScreen";
+import FavoritesScreen from "./containers/FavoritesScreen";
+
+import colors from "./assets/colors";
+
+const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
-  const [userToken, setUserToken] = useState(null);
-
-  const setToken = async (token) => {
-    if (token) {
-      AsyncStorage.setItem("userToken", token);
-    } else {
-      AsyncStorage.removeItem("userToken");
-    }
-
-    setUserToken(token);
-  };
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
-      // We should also handle error for production apps
-      const userToken = await AsyncStorage.getItem("userToken");
+      const productsAsync = await AsyncStorage.getItem("products");
+      setProducts(JSON.parse(productsAsync));
+      console.log("products app.js :", JSON.parse(productsAsync));
+      await new Promise((resolve) => setTimeout(resolve, 300));
 
-      // This will switch to the App screen or Auth screen and this loading
-      // screen will be unmounted and thrown away.
       setIsLoading(false);
-      setUserToken(userToken);
     };
 
     bootstrapAsync();
@@ -44,64 +36,80 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      {isLoading ? null : userToken === null ? ( // We haven't finished checking for the token yet
-        // No token found, user isn't signed in
-        <Stack.Navigator>
-          <Stack.Screen name="SignIn">
-            {() => <SignInScreen setToken={setToken} />}
-          </Stack.Screen>
-          <Stack.Screen name="SignUp">
-            {() => <SignUpScreen setToken={setToken} />}
-          </Stack.Screen>
+      {isLoading ? (
+        // ************
+        // STACK SCREEN
+        // ************
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Splash">{() => <SplashScreen />}</Stack.Screen>
         </Stack.Navigator>
       ) : (
-        // User is signed in
+        // ************
+        // NAVIGATION
+        // ************
         <Stack.Navigator>
           <Stack.Screen name="Tab" options={{ headerShown: false }}>
             {() => (
               <Tab.Navigator
                 tabBarOptions={{
-                  activeTintColor: "tomato",
-                  inactiveTintColor: "gray",
+                  showIcon: true,
+                  style: { backgroundColor: colors.greenYuka },
                 }}
               >
                 <Tab.Screen
                   name="Home"
                   options={{
-                    tabBarLabel: "Home",
+                    tabBarLabel: "Produits",
                     tabBarIcon: ({ color, size }) => (
-                      <Ionicons name={"ios-home"} size={size} color={color} />
+                      <Ionicons name={"ios-home"} size={size} color={"white"} />
                     ),
                   }}
                 >
                   {() => (
                     <Stack.Navigator>
                       <Stack.Screen
-                        name="Home"
+                        name="Products"
                         options={{
-                          title: "My App",
-                          headerStyle: { backgroundColor: "red" },
-                          headerTitleStyle: { color: "white" },
+                          headerShown: true,
+                          title: "Les produits",
                         }}
                       >
-                        {() => <HomeScreen />}
+                        {(props) => (
+                          <ProductsScreen {...props} products={products} />
+                        )}
                       </Stack.Screen>
 
                       <Stack.Screen
-                        name="Profile"
+                        name="Camera"
                         options={{
-                          title: "User Profile",
+                          headerShown: true,
+                          title: "",
                         }}
                       >
-                        {() => <ProfileScreen />}
+                        {(props) => (
+                          <CameraScreen
+                            {...props}
+                            products={products}
+                            setProducts={setProducts}
+                          />
+                        )}
+                      </Stack.Screen>
+
+                      <Stack.Screen
+                        name="Product"
+                        options={{
+                          headerShown: false,
+                        }}
+                      >
+                        {() => <ProductScreen />}
                       </Stack.Screen>
                     </Stack.Navigator>
                   )}
                 </Tab.Screen>
                 <Tab.Screen
-                  name="Settings"
+                  name="Favorites"
                   options={{
-                    tabBarLabel: "Settings",
+                    tabBarLabel: "Favoris",
                     tabBarIcon: ({ color, size }) => (
                       <Ionicons
                         name={"ios-options"}
@@ -114,10 +122,12 @@ export default function App() {
                   {() => (
                     <Stack.Navigator>
                       <Stack.Screen
-                        name="Settings"
-                        options={{ title: "Settings", tabBarLabel: "Settings" }}
+                        name="Favorites"
+                        options={{
+                          headerShown: false,
+                        }}
                       >
-                        {() => <SettingsScreen setToken={setToken} />}
+                        {(props) => <FavoritesScreen {...props} />}
                       </Stack.Screen>
                     </Stack.Navigator>
                   )}
