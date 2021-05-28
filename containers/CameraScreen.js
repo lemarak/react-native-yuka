@@ -4,6 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {
   StyleSheet,
+  Dimensions,
   Text,
   View,
   Button,
@@ -12,7 +13,10 @@ import {
 } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 
-export default function CameraScreen({ setProducts, products }) {
+// Dimensions
+const { height, width } = Dimensions.get("window");
+
+export default function CameraScreen({ setProductsBar, productsBar }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [productBar, setProductBar] = useState();
@@ -28,7 +32,6 @@ export default function CameraScreen({ setProducts, products }) {
 
   //   Get product from API OpenFoodFacts
   useEffect(() => {
-    console.log("codeBar début", productBar);
     const getProduct = async () => {
       try {
         const response = await axios.get(
@@ -47,13 +50,17 @@ export default function CameraScreen({ setProducts, products }) {
 
           // Save product in asyncStorage
           let tempProducts;
-          if (products && products.length > 0) {
-            tempProducts = products;
+          if (
+            productsBar &&
+            productsBar.length > 0 &&
+            productsBar.indexOf(productBar) === -1
+          ) {
+            tempProducts = productsBar;
           } else {
             tempProducts = [];
           }
           tempProducts.push(productBar);
-          setProducts(tempProducts);
+          setProductsBar(tempProducts);
           await AsyncStorage.setItem("products", JSON.stringify(tempProducts));
         } else {
           setScanned(false);
@@ -90,13 +97,7 @@ export default function CameraScreen({ setProducts, products }) {
           <TouchableOpacity onPress={() => setScanned(false)}>
             <Text>Tap to Scan Again</Text>
           </TouchableOpacity>
-          {/* <Image
-            source={{
-              uri: "https://static.openfoodfacts.org/images/products/073/762/806/4502/front_en.6.400.jpg",
-            }}
-            style={styles.imgProduct}
-          />
-          <Text>Mon produit</Text> */}
+
           <Image
             source={{
               uri: product.imageUrl,
@@ -116,21 +117,19 @@ const styles = StyleSheet.create({
   },
 
   fullScan: {
-    flex: 1,
-    // width: "100%",
-    // height: "50%",
+    width: width,
+    height: height,
   },
   halfScan: {
-    flex: 0.5,
-    width: "100%",
-    height: "50%",
+    width: width,
+    height: height / 2.5,
   },
   result: {
     flex: 1,
   },
   imgProduct: {
-    width: "100%",
-    height: "100%",
+    width: width,
+    height: height / 2,
     resizeMode: "contain",
   },
 });

@@ -19,19 +19,20 @@ const Stack = createStackNavigator();
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
-  const [products, setProducts] = useState([]);
+  const [productsBar, setProductsBar] = useState([]);
 
   useEffect(() => {
-    const bootstrapAsync = async () => {
+    const getAsync = async () => {
       const productsAsync = await AsyncStorage.getItem("products");
-      setProducts(JSON.parse(productsAsync));
+      setProductsBar(JSON.parse(productsAsync));
       console.log("products app.js :", JSON.parse(productsAsync));
+      // timing
       await new Promise((resolve) => setTimeout(resolve, 300));
 
       setIsLoading(false);
     };
 
-    bootstrapAsync();
+    getAsync();
   }, []);
 
   return (
@@ -70,12 +71,15 @@ export default function App() {
                       <Stack.Screen
                         name="Products"
                         options={{
-                          headerShown: true,
-                          title: "Les produits",
+                          headerShown: false,
                         }}
                       >
                         {(props) => (
-                          <ProductsScreen {...props} products={products} />
+                          <ProductsScreen
+                            {...props}
+                            productsBar={productsBar}
+                            setProductsBar={setProductsBar}
+                          />
                         )}
                       </Stack.Screen>
 
@@ -89,8 +93,8 @@ export default function App() {
                         {(props) => (
                           <CameraScreen
                             {...props}
-                            products={products}
-                            setProducts={setProducts}
+                            productsBar={productsBar}
+                            setProductsBar={setProductsBar}
                           />
                         )}
                       </Stack.Screen>
@@ -101,7 +105,7 @@ export default function App() {
                           headerShown: false,
                         }}
                       >
-                        {() => <ProductScreen />}
+                        {(props) => <ProductScreen {...props} />}
                       </Stack.Screen>
                     </Stack.Navigator>
                   )}
