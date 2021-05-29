@@ -39,11 +39,9 @@ export default function App() {
     <NavigationContainer>
       {isLoading ? (
         // ************
-        // STACK SCREEN
+        // SPLASH SCREEN
         // ************
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Splash">{() => <SplashScreen />}</Stack.Screen>
-        </Stack.Navigator>
+        <SplashScreen />
       ) : (
         // ************
         // NAVIGATION
@@ -52,6 +50,7 @@ export default function App() {
           <Stack.Screen name="Tab" options={{ headerShown: false }}>
             {() => (
               <Tab.Navigator
+                tabBarPosition="bottom"
                 tabBarOptions={{
                   showIcon: true,
                   style: { backgroundColor: colors.greenYuka },

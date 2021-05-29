@@ -1,29 +1,40 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { useNavigation } from "@react-navigation/core";
 import {
-  ActivityIndicator,
-  StyleSheet,
   Dimensions,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  SafeAreaView,
   FlatList,
+  Image,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
+
+import SplashScreen from "../containers/SplashScreen";
 
 import colors from "../assets/colors";
 // Dimensions
 const { height, width } = Dimensions.get("window");
 
-export default function ProductsScreen({ productsBar, setProductsBar }) {
-  const navigation = useNavigation();
+// *********************
+//  ProductsScreen
+// *********************
+
+export default function ProductsScreen({
+  productsBar,
+  setProductsBar,
+  navigation,
+}) {
+  // states
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasProduct, setHasProduct] = useState(false);
 
+  // useEffect
   useEffect(() => {
     const fetchData = async () => {
       // check if products not empty
@@ -53,10 +64,18 @@ export default function ProductsScreen({ productsBar, setProductsBar }) {
     };
 
     fetchData();
-  }, [productsBar]);
+  }, []);
+
+  // delete products (temp)
+  const deleteProducts = async () => {
+    setProductsBar([]);
+    setHasProduct(false);
+    await AsyncStorage.removeItem("products");
+  };
 
   return isLoading ? (
-    <ActivityIndicator size="large" color={colors.greenYuka} />
+    // <ActivityIndicator size="large" color={colors.greenYuka} />
+    <SplashScreen />
   ) : (
     <SafeAreaView style={styles.container}>
       {hasProduct ? (
@@ -99,15 +118,17 @@ export default function ProductsScreen({ productsBar, setProductsBar }) {
       )}
 
       <TouchableOpacity
+        style={{ height: 44 }}
         onPress={() => {
-          navigation.navigate("Camera", {});
+          navigation.navigate("Camera");
         }}
       >
         <Text>Scan</Text>
       </TouchableOpacity>
       <TouchableOpacity
+        style={{ height: 44 }}
         onPress={() => {
-          navigation.navigate("Camera", {});
+          deleteProducts();
         }}
       >
         <Text>Delete products</Text>
@@ -116,11 +137,15 @@ export default function ProductsScreen({ productsBar, setProductsBar }) {
   );
 }
 
+// *********************
+//  styles
+// *********************
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    marginTop: StatusBar.currentHeight,
   },
   lineProduct: {
     flexDirection: "row",

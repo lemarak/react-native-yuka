@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigation } from "@react-navigation/core";
 import { StyleSheet, Text, View, Image } from "react-native";
 
 export default function SplashScreen() {

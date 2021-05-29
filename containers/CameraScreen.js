@@ -3,19 +3,22 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {
-  StyleSheet,
   Dimensions,
-  Text,
-  View,
-  Button,
   Image,
+  ScrollView,
+  StyleSheet,
+  Text,
   TouchableOpacity,
+  View,
 } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 
 // Dimensions
 const { height, width } = Dimensions.get("window");
 
+// *********************
+//  CameraScreen
+// *********************
 export default function CameraScreen({ setProductsBar, productsBar }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
@@ -60,8 +63,9 @@ export default function CameraScreen({ setProductsBar, productsBar }) {
             tempProducts = [];
           }
           tempProducts.push(productBar);
-          setProductsBar(tempProducts);
+
           await AsyncStorage.setItem("products", JSON.stringify(tempProducts));
+          setProductsBar(tempProducts);
         } else {
           setScanned(false);
         }
@@ -93,7 +97,7 @@ export default function CameraScreen({ setProductsBar, productsBar }) {
         style={scanned ? styles.halfScan : styles.fullScan} //StyleSheet.absoluteFillObject
       />
       {product && (
-        <View style={styles.result}>
+        <ScrollView style={styles.result}>
           <TouchableOpacity onPress={() => setScanned(false)}>
             <Text>Tap to Scan Again</Text>
           </TouchableOpacity>
@@ -105,11 +109,15 @@ export default function CameraScreen({ setProductsBar, productsBar }) {
             style={styles.imgProduct}
           />
           <Text>{product.name}</Text>
-        </View>
+        </ScrollView>
       )}
     </View>
   );
 }
+
+// *********************
+//  styles
+// *********************
 
 const styles = StyleSheet.create({
   container: {
