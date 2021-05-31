@@ -15,6 +15,7 @@ import {
 } from "react-native";
 
 import SplashScreen from "../containers/SplashScreen";
+import Score from "../components/Score";
 
 import colors from "../assets/colors";
 // Dimensions
@@ -27,6 +28,8 @@ const { height, width } = Dimensions.get("window");
 export default function ProductsScreen({
   productsBar,
   setProductsBar,
+  newScan,
+  setNewScan,
   navigation,
 }) {
   // states
@@ -61,10 +64,11 @@ export default function ProductsScreen({
       }
       setData(tempData);
       setIsLoading(false);
+      setNewScan(false);
     };
 
     fetchData();
-  }, []);
+  }, [newScan]);
 
   // delete products (temp)
   const deleteProducts = async () => {
@@ -74,7 +78,6 @@ export default function ProductsScreen({
   };
 
   return isLoading ? (
-    // <ActivityIndicator size="large" color={colors.greenYuka} />
     <SplashScreen />
   ) : (
     <SafeAreaView style={styles.container}>
@@ -103,9 +106,10 @@ export default function ProductsScreen({
                     <Text style={styles.brandProduct}>
                       {item.product.brands}
                     </Text>
-                    <Text style={styles.brandProduct}>
+                    <Score score={item.product.nutriscore_score} />
+                    {/* <Text style={styles.brandProduct}>
                       score {item.product["nutriscore_grade"]}
-                    </Text>
+                    </Text> */}
                     <Text>date</Text>
                   </View>
                 </View>

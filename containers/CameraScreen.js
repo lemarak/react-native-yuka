@@ -4,7 +4,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {
   Dimensions,
-  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -13,13 +12,19 @@ import {
 } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 
+import HeaderProduct from "../components/HeaderProduct";
+
 // Dimensions
 const { height, width } = Dimensions.get("window");
 
 // *********************
 //  CameraScreen
 // *********************
-export default function CameraScreen({ setProductsBar, productsBar }) {
+export default function CameraScreen({
+  setProductsBar,
+  productsBar,
+  setNewScan,
+}) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [productBar, setProductBar] = useState();
@@ -43,13 +48,7 @@ export default function CameraScreen({ setProductsBar, productsBar }) {
         // Load Product
 
         if (response.data.code) {
-          data = response.data;
-          const tempProduct = {
-            code: productBar,
-            name: data.product.product_name,
-            imageUrl: data.product.image_url,
-          };
-          setProduct(tempProduct);
+          setProduct(response.data.product);
 
           // Save product in asyncStorage
           let tempProducts;
@@ -66,6 +65,7 @@ export default function CameraScreen({ setProductsBar, productsBar }) {
 
           await AsyncStorage.setItem("products", JSON.stringify(tempProducts));
           setProductsBar(tempProducts);
+          setNewScan(true);
         } else {
           setScanned(false);
         }
@@ -102,13 +102,7 @@ export default function CameraScreen({ setProductsBar, productsBar }) {
             <Text>Tap to Scan Again</Text>
           </TouchableOpacity>
 
-          <Image
-            source={{
-              uri: product.imageUrl,
-            }}
-            style={styles.imgProduct}
-          />
-          <Text>{product.name}</Text>
+          <HeaderProduct product={product} />
         </ScrollView>
       )}
     </View>
@@ -134,10 +128,5 @@ const styles = StyleSheet.create({
   },
   result: {
     flex: 1,
-  },
-  imgProduct: {
-    width: width,
-    height: height / 2,
-    resizeMode: "contain",
   },
 });

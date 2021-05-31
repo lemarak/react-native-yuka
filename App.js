@@ -20,6 +20,7 @@ const Stack = createStackNavigator();
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [productsBar, setProductsBar] = useState([]);
+  const [newScan, setNewScan] = useState(false);
 
   useEffect(() => {
     const getAsync = async () => {
@@ -78,6 +79,8 @@ export default function App() {
                             {...props}
                             productsBar={productsBar}
                             setProductsBar={setProductsBar}
+                            newScan={newScan}
+                            setNewScan={setNewScan}
                           />
                         )}
                       </Stack.Screen>
@@ -94,6 +97,7 @@ export default function App() {
                             {...props}
                             productsBar={productsBar}
                             setProductsBar={setProductsBar}
+                            setNewScan={setNewScan}
                           />
                         )}
                       </Stack.Screen>
