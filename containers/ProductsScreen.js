@@ -15,11 +15,10 @@ import {
 } from "react-native";
 
 import SplashScreen from "../containers/SplashScreen";
+import LineProduct from "../components/LineProduct";
 import Score from "../components/Score";
 
 import colors from "../assets/colors";
-// Dimensions
-const { height, width } = Dimensions.get("window");
 
 // *********************
 //  ProductsScreen
@@ -28,8 +27,6 @@ const { height, width } = Dimensions.get("window");
 export default function ProductsScreen({
   productsBar,
   setProductsBar,
-  newScan,
-  setNewScan,
   navigation,
 }) {
   // states
@@ -42,7 +39,7 @@ export default function ProductsScreen({
     const fetchData = async () => {
       // check if products not empty
       const tempData = [];
-      console.log("products :", productsBar);
+
       if (productsBar) {
         for (let i = 0; i < productsBar.length; i++) {
           try {
@@ -64,56 +61,36 @@ export default function ProductsScreen({
       }
       setData(tempData);
       setIsLoading(false);
-      setNewScan(false);
     };
 
     fetchData();
-  }, [newScan]);
+  }, [productsBar]);
 
   // delete products (temp)
   const deleteProducts = async () => {
     setProductsBar([]);
+    setFavoritesbar([]);
     setHasProduct(false);
     await AsyncStorage.removeItem("products");
+    await AsyncStorage.removeItem("favorites");
   };
 
   return isLoading ? (
     <SplashScreen />
   ) : (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor={colors.greenYuka} />
       {hasProduct ? (
         <FlatList
           data={data}
           keyExtractor={(item) => String(item.code)}
           renderItem={({ item, index }) => {
             return (
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("Product", { codeProduct: item.code });
-                }}
-              >
-                <View style={styles.lineProduct}>
-                  <Image
-                    style={styles.imgProduct}
-                    source={{
-                      uri: item.product.image_url,
-                    }}
-                  />
-                  <View style={styles.detailProduct}>
-                    <Text style={styles.titleProduct}>
-                      {item.product.product_name}
-                    </Text>
-                    <Text style={styles.brandProduct}>
-                      {item.product.brands}
-                    </Text>
-                    <Score score={item.product.nutriscore_score} />
-                    {/* <Text style={styles.brandProduct}>
-                      score {item.product["nutriscore_grade"]}
-                    </Text> */}
-                    <Text>date</Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
+              <LineProduct
+                navigation={navigation}
+                product={item.product}
+                codeBar={item.code}
+              />
             );
           }}
         ></FlatList>
@@ -149,29 +126,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: StatusBar.currentHeight,
-  },
-  lineProduct: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderBottomWidth: 1,
-    borderBottomColor: "grey",
-    width: width,
-  },
-  imgProduct: {
-    width: 100,
-    height: 150,
-    resizeMode: "contain",
-  },
-  detailProduct: {
-    marginLeft: 20,
-    justifyContent: "flex-start",
-  },
-  titleProduct: {
-    fontSize: 20,
-    fontWeight: "700",
-  },
-  brandProduct: {
-    fontSize: 16,
+    // marginTop: StatusBar.currentHeight,
   },
 });

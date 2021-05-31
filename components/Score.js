@@ -25,13 +25,11 @@ const Score = ({ score }) => {
       comment = "Excellent";
       color = "green";
     }
-    console.log("comment", comment);
     return { newScore: newScore, commentScore: comment, colorScore: color };
   };
 
   const { newScore, commentScore, colorScore } = displayScore();
 
-  console.log("commentScore", commentScore);
   return (
     <View style={styles.lineScore}>
       <FontAwesome name="circle" size={24} color={colorScore} />

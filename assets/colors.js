@@ -1,3 +1,4 @@
 export default {
-  greenYuka: "#5ECD71",
+  lightgreenYuka: "#5ECD71",
+  greenYuka: "#57B96D",
 };

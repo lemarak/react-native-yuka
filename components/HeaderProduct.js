@@ -1,13 +1,6 @@
 import React from "react";
 
-import {
-  Dimensions,
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 
 import Score from "../components/Score";
 
@@ -50,8 +43,6 @@ const styles = StyleSheet.create({
   lineProduct: {
     flexDirection: "row",
     alignItems: "center",
-    borderBottomWidth: 1,
-    borderBottomColor: "grey",
     width: width,
   },
   imgProduct: {

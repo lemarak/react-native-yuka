@@ -20,11 +20,7 @@ const { height, width } = Dimensions.get("window");
 // *********************
 //  CameraScreen
 // *********************
-export default function CameraScreen({
-  setProductsBar,
-  productsBar,
-  setNewScan,
-}) {
+export default function CameraScreen({ setProductsBar, productsBar }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [productBar, setProductBar] = useState();
@@ -57,7 +53,7 @@ export default function CameraScreen({
             productsBar.length > 0 &&
             productsBar.indexOf(productBar) === -1
           ) {
-            tempProducts = productsBar;
+            tempProducts = [...productsBar];
           } else {
             tempProducts = [];
           }
@@ -65,7 +61,6 @@ export default function CameraScreen({
 
           await AsyncStorage.setItem("products", JSON.stringify(tempProducts));
           setProductsBar(tempProducts);
-          setNewScan(true);
         } else {
           setScanned(false);
         }
