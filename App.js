@@ -86,6 +86,7 @@ export default function App() {
                             {...props}
                             productsBar={productsBar}
                             setProductsBar={setProductsBar}
+                            setFavoritesBar={setFavoritesBar}
                           />
                         )}
                       </Stack.Screen>

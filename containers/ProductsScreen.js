@@ -3,20 +3,16 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {
-  Dimensions,
   FlatList,
-  Image,
   SafeAreaView,
   StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
 } from "react-native";
 
 import SplashScreen from "../containers/SplashScreen";
 import LineProduct from "../components/LineProduct";
-import Score from "../components/Score";
 
 import colors from "../assets/colors";
 
@@ -27,6 +23,7 @@ import colors from "../assets/colors";
 export default function ProductsScreen({
   productsBar,
   setProductsBar,
+  setFavoritesBar,
   navigation,
 }) {
   // states
@@ -69,7 +66,7 @@ export default function ProductsScreen({
   // delete products (temp)
   const deleteProducts = async () => {
     setProductsBar([]);
-    setFavoritesbar([]);
+    setFavoritesBar([]);
     setHasProduct(false);
     await AsyncStorage.removeItem("products");
     await AsyncStorage.removeItem("favorites");
@@ -95,7 +92,7 @@ export default function ProductsScreen({
           }}
         ></FlatList>
       ) : (
-        <Text>No data</Text>
+        <Text>Pas de produits</Text>
       )}
 
       <TouchableOpacity

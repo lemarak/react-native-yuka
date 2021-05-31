@@ -41,8 +41,8 @@ export default function CameraScreen({ setProductsBar, productsBar }) {
         const response = await axios.get(
           `https://fr.openfoodfacts.org/api/v0/product/${productBar}.json`
         );
-        // Load Product
 
+        // Load Product
         if (response.data.code) {
           setProduct(response.data.product);
 
@@ -72,7 +72,6 @@ export default function CameraScreen({ setProductsBar, productsBar }) {
   }, [productBar, scanned]);
 
   const handleBarCodeScanned = async ({ type, data }) => {
-    console.log("codeBar", data);
     setProductBar(data);
     setScanned(true);
     alert(`Bar code with type ${type} and data ${data} has been scanned!`);
