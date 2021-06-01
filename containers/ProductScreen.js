@@ -3,11 +3,11 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {
+  ActivityIndicator,
   Dimensions,
   ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 
@@ -35,6 +35,7 @@ export default function ProductScreen({
   const [product, setProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isLoadingFavorite, setIsLoadingFavorite] = useState(false);
 
   //   Get product from API OpenFoodFacts
   useEffect(() => {
@@ -46,7 +47,6 @@ export default function ProductScreen({
           `https://fr.openfoodfacts.org/api/v0/product/${codeBar}.json`
         );
         if (response.data.code) {
-          console.log("favoritesBar in fetchData", favoritesBar);
           setProduct(response.data.product);
           setIsLoading(false);
           // check if product is favorite
@@ -59,9 +59,9 @@ export default function ProductScreen({
     fetchData();
   }, []);
 
-  const addFavorite = async () => {
+  const changeFavorite = async () => {
+    setIsLoadingFavorite(true);
     const codeBar = route.params.codeProduct;
-
     const newFavoritesBar = favoritesBar ? [...favoritesBar] : [];
 
     if (isFavorite) {
@@ -74,7 +74,12 @@ export default function ProductScreen({
     }
     await AsyncStorage.setItem("favorites", JSON.stringify(newFavoritesBar));
     setFavoritesBar(newFavoritesBar);
+    setIsLoadingFavorite(false);
   };
+
+  // *********************
+  //  ProductScreen
+  // *********************
   return isLoading ? (
     <SplashScreen />
   ) : (
@@ -88,13 +93,21 @@ export default function ProductScreen({
           color="white"
           onPress={() => navigation.goBack()}
         />
-        <Ionicons
-          style={styles.headerRight}
-          name={isFavorite ? "star" : "star-outline"}
-          size={24}
-          color="white"
-          onPress={() => addFavorite()}
-        />
+        {isLoadingFavorite ? (
+          <ActivityIndicator
+            style={styles.headerRight}
+            size="small"
+            color="white"
+          />
+        ) : (
+          <Ionicons
+            style={styles.headerRight}
+            name={isFavorite ? "star" : "star-outline"}
+            size={24}
+            color="white"
+            onPress={() => changeFavorite()}
+          />
+        )}
       </View>
 
       <ScrollView style={styles.container}>

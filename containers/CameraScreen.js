@@ -13,6 +13,10 @@ import {
 import { BarCodeScanner } from "expo-barcode-scanner";
 
 import HeaderProduct from "../components/HeaderProduct";
+import LineHeader from "../components/LineHeader";
+import DetailProduct from "../components/DetailProduct";
+
+import colors from "../assets/colors";
 
 // Dimensions
 const { height, width } = Dimensions.get("window");
@@ -43,7 +47,7 @@ export default function CameraScreen({ setProductsBar, productsBar }) {
         );
 
         // Load Product
-        if (response.data.code) {
+        if (response.data.status !== 0) {
           setProduct(response.data.product);
 
           // Save product in asyncStorage
@@ -62,19 +66,19 @@ export default function CameraScreen({ setProductsBar, productsBar }) {
           await AsyncStorage.setItem("products", JSON.stringify(tempProducts));
           setProductsBar(tempProducts);
         } else {
-          setScanned(false);
+          setProduct(null);
         }
       } catch (error) {
         console.log(error);
       }
     };
     getProduct();
-  }, [productBar, scanned]);
+  }, [productBar]);
 
   const handleBarCodeScanned = async ({ type, data }) => {
     setProductBar(data);
     setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
   };
 
   if (hasPermission === null) {
@@ -88,17 +92,27 @@ export default function CameraScreen({ setProductsBar, productsBar }) {
     <View style={styles.container}>
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        style={scanned ? styles.halfScan : styles.fullScan} //StyleSheet.absoluteFillObject
+        style={scanned ? styles.halfScan : StyleSheet.absoluteFillObject} //StyleSheet.absoluteFillObject
       />
-      {product && (
+      {product ? (
         <ScrollView style={styles.result}>
-          <TouchableOpacity onPress={() => setScanned(false)}>
-            <Text>Tap to Scan Again</Text>
-          </TouchableOpacity>
-
           <HeaderProduct product={product} />
+          <LineHeader />
+          <DetailProduct product={product} />
         </ScrollView>
-      )}
+      ) : scanned ? (
+        <View style={styles.noProduct}>
+          <Text style={styles.textNoProduct}>
+            Ce produit n'est pas disponible dans notre base.
+          </Text>
+          <TouchableOpacity
+            style={styles.newScan}
+            onPress={() => setScanned(false)}
+          >
+            <Text style={styles.textNewScan}>Nouveau scan</Text>
+          </TouchableOpacity>
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -113,14 +127,36 @@ const styles = StyleSheet.create({
   },
 
   fullScan: {
-    width: width,
-    height: height,
+    flex: 1,
   },
   halfScan: {
-    width: width,
-    height: height / 2.5,
+    flex: 1,
+    // width: "100%",
+    // height: height / 2.5,
   },
   result: {
     flex: 1,
+    paddingHorizontal: 10,
+    marginTop: 10,
+  },
+  noProduct: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 20,
+  },
+  textNoProduct: {
+    fontSize: 20,
+    color: colors.greenYuka,
+  },
+  newScan: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: colors.lightgreenYuka,
+    borderRadius: 10,
+    padding: 10,
+  },
+  textNewScan: {
+    color: "white",
   },
 });

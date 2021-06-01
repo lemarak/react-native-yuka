@@ -97,6 +97,9 @@ export default function App() {
                           headerShown: true,
                           title: "",
                         }}
+                        tabBarOptions={{
+                          tabBarVisible: false,
+                        }}
                       >
                         {(props) => (
                           <CameraScreen
