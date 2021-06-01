@@ -58,13 +58,13 @@ export default function CameraScreen({ setProductsBar, productsBar }) {
             productsBar.indexOf(productBar) === -1
           ) {
             tempProducts = [...productsBar];
-          } else {
-            tempProducts = [];
+            tempProducts.push(productBar);
+            await AsyncStorage.setItem(
+              "products",
+              JSON.stringify(tempProducts)
+            );
+            setProductsBar(tempProducts);
           }
-          tempProducts.push(productBar);
-
-          await AsyncStorage.setItem("products", JSON.stringify(tempProducts));
-          setProductsBar(tempProducts);
         } else {
           setProduct(null);
         }
@@ -98,7 +98,15 @@ export default function CameraScreen({ setProductsBar, productsBar }) {
         <ScrollView style={styles.result}>
           <HeaderProduct product={product} />
           <LineHeader />
-          <DetailProduct product={product} />
+          {product.nutriscore_data ? (
+            <DetailProduct product={product} />
+          ) : (
+            <View style={styles.noData}>
+              <Text style={styles.textNoData}>
+                Pas données sur les nutriments
+              </Text>
+            </View>
+          )}
         </ScrollView>
       ) : scanned ? (
         <View style={styles.noProduct}>

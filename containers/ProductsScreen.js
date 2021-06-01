@@ -11,10 +11,13 @@ import {
   TouchableOpacity,
 } from "react-native";
 
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+
 import SplashScreen from "../containers/SplashScreen";
 import LineProduct from "../components/LineProduct";
 
 import colors from "../assets/colors";
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
 // *********************
 //  ProductsScreen
@@ -96,12 +99,12 @@ export default function ProductsScreen({
       )}
 
       <TouchableOpacity
-        style={{ height: 44 }}
+        style={styles.btnScan}
         onPress={() => {
           navigation.navigate("Camera");
         }}
       >
-        <Text>Scan</Text>
+        <MaterialCommunityIcons name="barcode-scan" size={28} color="white" />
       </TouchableOpacity>
       <TouchableOpacity
         style={{ height: 44 }}
@@ -109,7 +112,7 @@ export default function ProductsScreen({
           deleteProducts();
         }}
       >
-        <Text>Delete products</Text>
+        <Text style={{ color: "red" }}>Delete products (temporaire)</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -123,6 +126,18 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    paddingHorizontal: 10,
     // marginTop: StatusBar.currentHeight,
+  },
+  btnScan: {
+    position: "absolute",
+    bottom: 30,
+    right: 30,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: colors.greenYuka,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

@@ -12,22 +12,24 @@ const HeaderProduct = ({ product }) => {
   //  HeaderProduct
   // *********************
   return (
-    <View>
-      <View style={styles.lineProduct}>
-        <Image
-          style={styles.imgProduct}
-          source={{
-            uri: product.image_url,
-          }}
-        />
-        <View style={styles.detailProduct}>
-          <Text style={styles.titleProduct} numberOfLines={1}>
-            {product.product_name}
-          </Text>
-          <Text style={styles.brandProduct}>{product.brands}</Text>
+    <View style={styles.headerProduct}>
+      <Image
+        style={styles.imgProduct}
+        source={
+          product.image_url
+            ? {
+                uri: product.image_url,
+              }
+            : require("../assets/img/logo-carotte-empty.png")
+        }
+      />
+      <View style={styles.detailProduct}>
+        <Text style={styles.titleProduct} numberOfLines={1}>
+          {product.product_name}
+        </Text>
+        <Text style={styles.brandProduct}>{product.brands}</Text>
 
-          <Score score={product.nutriscore_score} />
-        </View>
+        <Score score={product.nutriscore_score} screen="oneProduct" />
       </View>
     </View>
   );
@@ -40,20 +42,21 @@ export default HeaderProduct;
 // *********************
 
 const styles = StyleSheet.create({
-  lineProduct: {
+  headerProduct: {
+    marginTop: 20,
+    flex: 1,
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start",
     width: width,
   },
   imgProduct: {
-    width: 150,
-    height: 200,
+    width: 130,
+    height: 180,
     resizeMode: "contain",
   },
   detailProduct: {
     flex: 1,
-    marginLeft: 20,
-    justifyContent: "flex-start",
+    paddingHorizontal: 20,
   },
   titleProduct: {
     fontSize: 24,

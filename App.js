@@ -28,7 +28,6 @@ export default function App() {
       setProductsBar(JSON.parse(productsAsync));
       const favoritesAsync = await AsyncStorage.getItem("favorites");
       setFavoritesBar(JSON.parse(favoritesAsync));
-      console.log("favorites app.js :", JSON.parse(favoritesAsync));
       // timing
       await new Promise((resolve) => setTimeout(resolve, 300));
 

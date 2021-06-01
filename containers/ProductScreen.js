@@ -8,6 +8,7 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
+  Text,
   View,
 } from "react-native";
 
@@ -59,14 +60,13 @@ export default function ProductScreen({
     fetchData();
   }, []);
 
-  const changeFavorite = async () => {
+  const toggleFavorite = async () => {
     setIsLoadingFavorite(true);
     const codeBar = route.params.codeProduct;
     const newFavoritesBar = favoritesBar ? [...favoritesBar] : [];
 
     if (isFavorite) {
       newFavoritesBar.splice(newFavoritesBar.indexOf(codeBar), 1);
-      console.log("after delete ", newFavoritesBar);
       setIsFavorite(false);
     } else {
       newFavoritesBar.push(codeBar);
@@ -105,7 +105,7 @@ export default function ProductScreen({
             name={isFavorite ? "star" : "star-outline"}
             size={24}
             color="white"
-            onPress={() => changeFavorite()}
+            onPress={() => toggleFavorite()}
           />
         )}
       </View>
@@ -113,7 +113,15 @@ export default function ProductScreen({
       <ScrollView style={styles.container}>
         <HeaderProduct product={product} />
         <LineHeader />
-        <DetailProduct product={product} />
+        {product.nutriscore_data ? (
+          <DetailProduct product={product} />
+        ) : (
+          <View style={styles.noData}>
+            <Text style={styles.textNoData}>
+              Pas données sur les nutriments
+            </Text>
+          </View>
+        )}
       </ScrollView>
     </>
   );
@@ -141,5 +149,14 @@ const styles = StyleSheet.create({
   },
   headerRight: {
     paddingHorizontal: 20,
+  },
+  noData: {
+    paddingTop: 20,
+    alignItems: "center",
+    marginTop: 16,
+  },
+  textNoData: {
+    color: "grey",
+    fontSize: 18,
   },
 });
