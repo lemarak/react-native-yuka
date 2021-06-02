@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
@@ -14,7 +14,7 @@ import FavoritesScreen from "./containers/FavoritesScreen";
 
 import colors from "./assets/colors";
 
-const Tab = createMaterialTopTabNavigator();
+const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -52,7 +52,6 @@ export default function App() {
           <Stack.Screen name="Tab" options={{ headerShown: false }}>
             {() => (
               <Tab.Navigator
-                tabBarPosition="bottom"
                 tabBarOptions={{
                   showIcon: true,
                   style: { backgroundColor: colors.lightgreenYuka },
@@ -61,7 +60,7 @@ export default function App() {
                 <Tab.Screen
                   name="Home"
                   options={{
-                    tabBarLabel: "Produits",
+                    tabBarLabel: "",
                     tabBarIcon: () => (
                       <MaterialCommunityIcons
                         name="fruit-watermelon"
@@ -89,41 +88,6 @@ export default function App() {
                           />
                         )}
                       </Stack.Screen>
-                      {/* Camera */}
-                      <Stack.Screen
-                        name="Camera"
-                        options={{
-                          headerShown: true,
-                          title: "",
-                        }}
-                        tabBarOptions={{
-                          tabBarVisible: false,
-                        }}
-                      >
-                        {(props) => (
-                          <CameraScreen
-                            {...props}
-                            productsBar={productsBar}
-                            setProductsBar={setProductsBar}
-                          />
-                        )}
-                      </Stack.Screen>
-
-                      {/* Product */}
-                      <Stack.Screen
-                        name="Product"
-                        options={{
-                          headerShown: false,
-                        }}
-                      >
-                        {(props) => (
-                          <ProductScreen
-                            {...props}
-                            favoritesBar={favoritesBar}
-                            setFavoritesBar={setFavoritesBar}
-                          />
-                        )}
-                      </Stack.Screen>
                     </Stack.Navigator>
                   )}
                 </Tab.Screen>
@@ -131,7 +95,7 @@ export default function App() {
                 <Tab.Screen
                   name="Favorites"
                   options={{
-                    tabBarLabel: "Favoris",
+                    tabBarLabel: "",
                     tabBarIcon: () => (
                       <Ionicons name={"star"} size={24} color="white" />
                     ),
@@ -156,6 +120,41 @@ export default function App() {
                   )}
                 </Tab.Screen>
               </Tab.Navigator>
+            )}
+          </Stack.Screen>
+          {/* Camera */}
+          <Stack.Screen
+            name="Camera"
+            options={{
+              headerShown: true,
+              title: "",
+              headerStyle: {
+                backgroundColor: colors.lightgreenYuka,
+              },
+              headerTintColor: "#fff",
+            }}
+          >
+            {(props) => (
+              <CameraScreen
+                {...props}
+                productsBar={productsBar}
+                setProductsBar={setProductsBar}
+              />
+            )}
+          </Stack.Screen>
+          {/* Product */}
+          <Stack.Screen
+            name="Product"
+            options={{
+              headerShown: false,
+            }}
+          >
+            {(props) => (
+              <ProductScreen
+                {...props}
+                favoritesBar={favoritesBar}
+                setFavoritesBar={setFavoritesBar}
+              />
             )}
           </Stack.Screen>
         </Stack.Navigator>

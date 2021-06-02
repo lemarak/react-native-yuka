@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
   },
   halfScan: {
     flex: 1,
-    // width: "100%",
+    width: "100%",
     // height: height / 2.5,
   },
   result: {

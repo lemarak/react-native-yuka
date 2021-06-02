@@ -17,6 +17,9 @@ const LineScore = ({ score, itemScore, value }) => {
     } else if (score >= 2) {
       comment = "Moyen";
       color = "orange";
+    } else if (score > 0) {
+      comment = "Bon";
+      color = colors.lightgreenYuka;
     } else {
       comment = "Excellent";
       color = colors.greenYuka;
@@ -57,34 +60,36 @@ const LineScore = ({ score, itemScore, value }) => {
           size={24}
           color="grey"
         />
-        <View style={styles.detailScore}>
-          <View style={styles.comment}>
-            <Text style={styles.textItem}>{itemScore}</Text>
-            <Text style={styles.textComment}>{comment}</Text>
-          </View>
-          <TouchableOpacity
-            style={styles.score}
-            onPress={() => setIsExpand(!isExpand)}
-          >
-            <Text style={styles.scoreValue}>{`${value} ${
-              getInfos().unity
-            }`}</Text>
-            <FontAwesome name="circle" size={20} color={colorScore} />
+        <View style={styles.detailRange}>
+          <View style={styles.detailScore}>
+            <View style={styles.comment}>
+              <Text style={styles.textItem}>{itemScore}</Text>
+              <Text style={styles.textComment}>{comment}</Text>
+            </View>
+            <TouchableOpacity
+              style={styles.score}
+              onPress={() => setIsExpand(!isExpand)}
+            >
+              <Text style={styles.scoreValue}>{`${value} ${
+                getInfos().unity
+              }`}</Text>
+              <FontAwesome name="circle" size={20} color={colorScore} />
 
-            <FontAwesome
-              style={styles.chevron}
-              name={isExpand ? "chevron-down" : "chevron-right"}
-              size={18}
-              color="grey"
-            />
-          </TouchableOpacity>
+              <FontAwesome
+                style={styles.chevron}
+                name={isExpand ? "chevron-down" : "chevron-right"}
+                size={18}
+                color="grey"
+              />
+            </TouchableOpacity>
+          </View>
+          {isExpand && (
+            <View>
+              <RangeBar color={colorScore} />
+            </View>
+          )}
         </View>
       </View>
-      {isExpand && (
-        <View>
-          <RangeBar />
-        </View>
-      )}
     </View>
   );
 };
@@ -98,23 +103,26 @@ export default LineScore;
 const styles = StyleSheet.create({
   lineScore: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start",
     marginTop: 10,
     paddingHorizontal: 10,
   },
   icon: {
-    justifyContent: "center",
-    alignItems: "center",
-    paddingRight: 16,
+    flex: 0.1,
+    paddingTop: 4,
+  },
+  detailRange: {
+    flex: 1,
+    flexDirection: "column",
+    borderBottomWidth: 1,
+    paddingBottom: 8,
+    borderColor: "lightgrey",
   },
   detailScore: {
     marginLeft: 10,
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
-    borderBottomWidth: 1,
-    paddingBottom: 8,
-    borderColor: "lightgrey",
   },
   comment: {
     flexDirection: "column",

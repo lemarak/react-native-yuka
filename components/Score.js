@@ -12,12 +12,18 @@ const Score = ({ score, screen }) => {
     let newScore;
     if (score) {
       newScore = (score * -1 + 36) * 2 - 1;
+      if (score > 0) {
+        newScore = parseInt(newScore / 2);
+      }
       if (newScore <= 30) {
         comment = "Mauvais";
         color = "red";
-      } else if (newScore > 30 && newScore <= 60) {
+      } else if (newScore > 30 && newScore <= 50) {
         comment = "Moyen";
         color = "orange";
+      } else if (newScore > 50 && newScore <= 80) {
+        comment = "Bon";
+        color = colors.lightgreenYuka;
       } else {
         comment = "Excellent";
         color = colors.greenYuka;
